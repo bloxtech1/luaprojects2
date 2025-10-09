@@ -31,7 +31,21 @@ title.BackgroundTransparency = 1
 title.Font = Enum.Font.GothamBold
 title.TextColor3 = Color3.fromRGB(209, 209, 255)
 title.TextSize = 18
+title.Name = "TitleLabel"
 title.Parent = frame
+
+-- Minimize Button
+local minimizeBtn = Instance.new("TextButton")
+minimizeBtn.Text = "_"
+minimizeBtn.Size = UDim2.new(0, 32, 0, 32)
+minimizeBtn.Position = UDim2.new(1, -36, 0, 2)
+minimizeBtn.BackgroundColor3 = Color3.fromRGB(80, 80, 120)
+minimizeBtn.BorderSizePixel = 0
+minimizeBtn.Font = Enum.Font.GothamBold
+minimizeBtn.TextColor3 = Color3.fromRGB(255,255,255)
+minimizeBtn.TextSize = 20
+minimizeBtn.Name = "MinimizeButton"
+minimizeBtn.Parent = frame
 
 local onOff = Instance.new("TextButton")
 onOff.Text = "Bot ON"
@@ -119,6 +133,22 @@ info.TextColor3 = Color3.fromRGB(140,140,255)
 info.Font = Enum.Font.Gotham
 info.TextSize = 12
 info.Parent = frame
+
+-- Minimize logic
+local minimized = false
+minimizeBtn.MouseButton1Click:Connect(function()
+	minimized = not minimized
+	for _, child in ipairs(frame:GetChildren()) do
+		if child ~= title and child ~= minimizeBtn then
+			child.Visible = not minimized
+		end
+	end
+	if minimized then
+		frame.Size = UDim2.new(0, 320, 0, 38)
+	else
+		frame.Size = UDim2.new(0, 320, 0, 280)
+	end
+end)
 
 -- GUI Functionality
 onOff.MouseButton1Click:Connect(function()
