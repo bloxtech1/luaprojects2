@@ -44,6 +44,7 @@ minimizeBtn.BorderSizePixel = 0
 minimizeBtn.Font = Enum.Font.GothamBold
 minimizeBtn.TextColor3 = Color3.fromRGB(255,255,255)
 minimizeBtn.TextSize = 20
+minimizeBtn.ZIndex = 10
 minimizeBtn.Name = "MinimizeButton"
 minimizeBtn.Parent = frame
 
