@@ -21,6 +21,7 @@ frame.Size = UDim2.new(0, 320, 0, 280)
 frame.Position = UDim2.new(0.5, -160, 0.2, 0)
 frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 frame.BorderSizePixel = 0
+frame.ClipsDescendants = true -- Prevent children from overflowing
 frame.Parent = gui
 
 local title = Instance.new("TextLabel")
@@ -61,6 +62,7 @@ apiBox.TextColor3 = Color3.new(1,1,1)
 apiBox.ClearTextOnFocus = false
 apiBox.Font = Enum.Font.Code
 apiBox.TextSize = 14
+apiBox.TextWrapped = true -- Prevent clipping
 apiBox.Parent = frame
 
 local distLabel = Instance.new("TextLabel")
@@ -82,6 +84,7 @@ distBox.TextColor3 = Color3.new(1,1,1)
 distBox.ClearTextOnFocus = false
 distBox.Font = Enum.Font.Code
 distBox.TextSize = 14
+distBox.TextWrapped = true -- Prevent clipping
 distBox.Parent = frame
 
 local persLabel = Instance.new("TextLabel")
@@ -103,8 +106,8 @@ persBox.TextColor3 = Color3.new(1,1,1)
 persBox.ClearTextOnFocus = false
 persBox.Font = Enum.Font.Code
 persBox.TextSize = 13
-persBox.TextWrapped = true
-persBox.MultiLine = true
+persBox.TextWrapped = true -- Prevent clipping
+persBox.MultiLine = true   -- Allow multiline input
 persBox.Parent = frame
 
 local info = Instance.new("TextLabel")
