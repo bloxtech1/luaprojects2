@@ -30,31 +30,47 @@ b:Slider("Follow Speed", {
 end)
 
 -- Dropdown + list logic
-local playerDropdown
+local playerDropdown = nil
 local playerList = {}
 
-local function updatePlayerList()
+local function getCurrentSelected()
+    return getgenv().SelectedPlayer or "Nearest Player"
+end
+
+local function updatePlayerList(recreate)
     playerList = {"Nearest Player"}
     for _, player in pairs(Players:GetPlayers()) do
         if player ~= localPlayer then
             table.insert(playerList, player.Name)
         end
     end
+
+    -- If SetOptions exists, use it; else, recreate dropdown
     if playerDropdown and playerDropdown.SetOptions then
         playerDropdown:SetOptions(playerList)
+    elseif recreate then
+        if playerDropdown and playerDropdown.Destroy then
+            playerDropdown:Destroy()
+        end
+        playerDropdown = b:Dropdown("Select Player", playerList, true, function(value)
+            if value and value ~= "" then
+                getgenv().SelectedPlayer = value
+                notify("Player Selected", value, 2)
+            end
+        end)
+        -- Set dropdown to current selection
+        if playerDropdown.SetValue then
+            playerDropdown:SetValue(getCurrentSelected())
+        end
     end
 end
 
-playerDropdown = b:Dropdown("Select Player", {"Nearest Player"}, true, function(value)
-    if value and value ~= "" then
-        getgenv().SelectedPlayer = value
-        notify("Player Selected", value, 2)
-    end
-end)
+-- Initial dropdown creation
+updatePlayerList(true)
 
 -- Refresh button
 b:Button("Refresh Player List", function()
-    updatePlayerList()
+    updatePlayerList(true)
     notify("Player List", "Updated!", 2)
 end)
 
@@ -77,15 +93,15 @@ end)
 -- Update list when players join/leave
 Players.PlayerAdded:Connect(function()
     task.wait(1)
-    updatePlayerList()
+    updatePlayerList(true)
 end)
 
 Players.PlayerRemoving:Connect(function()
     task.wait(1)
-    updatePlayerList()
+    updatePlayerList(true)
 end)
 
-task.delay(2, updatePlayerList)
+task.delay(2, function() updatePlayerList(true) end)
 
 -- Nearest player logic
 local function getNearestPlayer()
@@ -133,7 +149,6 @@ RunService.RenderStepped:Connect(function()
             localChar:FindFirstChildOfClass("Humanoid").AutoRotate = false
 
             if getgenv().MimicMoves then
-                -- Mimic mode
                 part.CFrame = part.CFrame:Lerp(targetPart.CFrame, getgenv().HowFastDanSchneiderCatchesYou)
                 local humanoid = localChar:FindFirstChildOfClass("Humanoid")
                 if humanoid and targetChar:FindFirstChildOfClass("Humanoid") then
@@ -143,7 +158,6 @@ RunService.RenderStepped:Connect(function()
                     end
                 end
             else
-                -- Follow mode
                 part.CFrame = part.CFrame:Lerp(
                     CFrame.new(part.Position, targetPart.Position) * CFrame.Angles(0, math.rad(25), 0),
                     getgenv().HowFastDanSchneiderCatchesYou
