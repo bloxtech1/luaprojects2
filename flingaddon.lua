@@ -16,50 +16,79 @@ local function notify(title, text, duration)
     })
 end
 
-local library = loadstring(game:HttpGet(("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/wall%20v3")))()
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/wall%20v3"))()
 local w = library:CreateWindow("Player Follower")
 local b = w:CreateFolder("Follow Settings")
 
 -- Speed slider
 b:Slider("Follow Speed", {
-    min = 0;
-    max = 1;
-    precise = true;
+    min = 0; max = 1; precise = true;
 }, function(value)
     getgenv().HowFastDanSchneiderCatchesYou = value
 end)
 
--- Dropdown + list logic
-local playerDropdown = nil
-local playerList = {}
+-- Button-based player selection logic with visual feedback
+local playerButtons = {}
 
-local function updatePlayerList()
-    playerList = {"Nearest Player"}
-    for _, player in pairs(Players:GetPlayers()) do
-        if player ~= localPlayer then
-            table.insert(playerList, player.Name)
+local function clearPlayerButtons()
+    for _, btnData in ipairs(playerButtons) do
+        if btnData.button and btnData.button.Destroy then
+            btnData.button:Destroy()
         end
     end
+    playerButtons = {}
+end
 
-    -- Only update options, never recreate!
-    if playerDropdown and playerDropdown.SetOptions then
-        playerDropdown:SetOptions(playerList)
+local function drawPlayerButtons()
+    clearPlayerButtons()
+    -- Always add "Nearest Player" first
+    table.insert(playerButtons, {
+        name = "Nearest Player",
+        button = b:Button(
+            (getgenv().SelectedPlayer == "Nearest Player" and "-> " or "") .. "Nearest Player",
+            function()
+                getgenv().SelectedPlayer = "Nearest Player"
+                drawPlayerButtons()
+                notify("Player Selected", "Nearest Player", 2)
+            end
+        )
+    })
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= localPlayer then
+            local displayName = player.Name
+            local isSelected = getgenv().SelectedPlayer == player.Name
+            table.insert(playerButtons, {
+                name = displayName,
+                button = b:Button(
+                    (isSelected and "-> " or "") .. displayName,
+                    function()
+                        getgenv().SelectedPlayer = displayName
+                        drawPlayerButtons()
+                        notify("Player Selected", displayName, 2)
+                    end
+                )
+            })
+        end
     end
 end
 
--- Create dropdown ONCE
-playerDropdown = b:Dropdown("Select Player", {"Nearest Player"}, true, function(value)
-    if value and value ~= "" then
-        getgenv().SelectedPlayer = value
-        notify("Player Selected", value, 2)
-    end
-end)
+drawPlayerButtons()
 
--- Refresh button just updates options
+-- Refresh button
 b:Button("Refresh Player List", function()
-    updatePlayerList()
+    drawPlayerButtons()
     notify("Player List", "Updated!", 2)
 end)
+
+Players.PlayerAdded:Connect(function()
+    task.wait(1)
+    drawPlayerButtons()
+end)
+Players.PlayerRemoving:Connect(function()
+    task.wait(1)
+    drawPlayerButtons()
+end)
+task.delay(2, drawPlayerButtons)
 
 -- Toggles
 b:Toggle("Enable Following", function(bool)
@@ -76,19 +105,6 @@ b:Toggle("Mimic Movements", function(bool)
         notify("Mimic", "Disabled")
     end
 end)
-
--- Update list when players join/leave
-Players.PlayerAdded:Connect(function()
-    task.wait(1)
-    updatePlayerList()
-end)
-
-Players.PlayerRemoving:Connect(function()
-    task.wait(1)
-    updatePlayerList()
-end)
-
-task.delay(2, updatePlayerList)
 
 -- Nearest player logic
 local function getNearestPlayer()
@@ -172,6 +188,7 @@ mouse.KeyDown:Connect(function(key)
     if key == "x" then
         getgenv().Daddy_Catches_You = not getgenv().Daddy_Catches_You
         notify("Following", getgenv().Daddy_Catches_You and "Enabled" or "Disabled")
+        drawPlayerButtons()
     elseif key == "z" then
         getgenv().MimicMoves = not getgenv().MimicMoves
         if getgenv().MimicMoves then
@@ -180,5 +197,6 @@ mouse.KeyDown:Connect(function(key)
         else
             notify("Mimic", "Disabled")
         end
+        drawPlayerButtons()
     end
 end)
