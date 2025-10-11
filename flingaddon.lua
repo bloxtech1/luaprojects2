@@ -27,6 +27,23 @@ b:Slider("Follow Speed", {
     getgenv().HowFastDanSchneiderCatchesYou = value
 end)
 
+-- NEW: Manual Username Entry
+b:Box("Type Username", "string", function(value)
+    local trimmed = string.gsub(value, "%s+", "")
+    if trimmed ~= "" then
+        if trimmed == "Nearest" or trimmed == "Nearest Player" then
+            getgenv().SelectedPlayer = "Nearest Player"
+            notify("Player Selected", "Nearest Player", 2)
+        elseif Players:FindFirstChild(trimmed) then
+            getgenv().SelectedPlayer = trimmed
+            notify("Player Selected", "Found and set to "..trimmed, 2)
+        else
+            getgenv().SelectedPlayer = nil
+            notify("Player Not Found", "No player with username: " .. trimmed, 3)
+        end
+    end
+end)
+
 -- Button-based player selection logic with visual feedback
 local playerButtons = {}
 
