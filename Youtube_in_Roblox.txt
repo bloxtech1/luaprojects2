@@ -1,0 +1,6 @@
+function open_browser(url, asJson)
+    local info = { presentationStyle = 2, url = tostring(url or ""), title = "youtube.com", visible = true }
+    local msg = asJson and game:GetService("HttpService"):JSONEncode(info) or (info.title .. "\n" .. info.url)
+    game:GetService("GuiService"):BroadcastNotification(msg, 20)
+end
+open_browser("https://www.youtube.com", true)
