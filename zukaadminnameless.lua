@@ -12186,8 +12186,8 @@ cmd.add({"unspam","unlag","unchatspam","unanimlag","unremotespam"},{"unspam","St
 	NAlib.disconnect("spam")
 end)
 
-cmd.add({"UNCTest","UNC"},{"UNCTest (UNC)","Test how many functions your executor supports"},function()
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/ltseverydayyou/uuuuuuu/main/UNC%20test"))()
+cmd.add({"catbypass","catb"},{"catbypass (catb)","Bypass Player Chat"},function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/shadow62x/catbypass/main/upfix"))()
 end)
 
 -- game based so bye bye api
